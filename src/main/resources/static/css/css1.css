@@ -1,0 +1,181 @@
+/* 容器样式 */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+    /*background-color: rgba(255, 255, 255, 0.3);*/
+    background-color: rgba(255, 255, 255, 0);
+    backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+
+/* 表格响应式样式 */
+.table-responsive {
+    overflow-x: auto;
+}
+
+/* 表格样式 */
+.table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+/* 表头样式 */
+.table th {
+    font-size: 16px;
+    font-weight: 700;
+    color: #333;
+    background-color: #f4f4f4;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ccc;
+}
+
+/* 表格单元格样式 */
+.table td {
+    font-size: 14px;
+    color: #666;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ccc;
+}
+
+/* 奇数行的样式 */
+.table tbody tr:nth-child(odd) {
+    background-color: #f7f7f7;
+}
+
+/* 表格悬停样式 */
+.table tbody tr:hover {
+    background-color: #f0f0f0;
+}
+
+/* 偶数行的样式 */
+.table tbody tr:nth-child(even) {
+    background-color: #fff;
+}
+
+/* 去掉最后一行下边框 */
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* 去掉第一列和最后一列的左右边框 */
+.table tbody td:first-child, .table tbody td:last-child {
+    border-left: none;
+    border-right: none;
+}
+
+/* 表格宽度调整 */
+.table th:nth-child(1), .table td:nth-child(1) {
+    width: 30%;
+}
+
+.table th:nth-child(2), .table td:nth-child(2) {
+    width: 20%;
+}
+
+.table th:nth-child(3), .table td:nth-child(3) {
+    width: 50%;
+}
+body {
+    background: linear-gradient(to bottom, #ffffff, #e6f7ff);
+}
+
+
+.table-responsive {
+    overflow-x: auto;
+    border-collapse: collapse;
+}
+
+.table {
+    width: 100%;
+    margin: 0;
+    background: linear-gradient(to bottom, #ffffff, #e6f7ff);
+}
+
+.table th {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.table th, .table td {
+    padding: 12px 15px;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid #dee2e6;
+}
+
+.table tbody tr:nth-child(odd) {
+    background-color: #f8f9fa;
+}
+
+.table tbody tr:hover {
+    background-color: #c8e6c9;
+}
+
+.table tbody td {
+    font-size: 14px;
+}
+
+.table tbody td:first-child {
+    text-align: left;
+    font-weight: bold;
+}
+
+ .pagination {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     margin: 20px 0;
+ }
+
+.pagination ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.pagination li {
+    margin-right: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.pagination li.active {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.pagination li a {
+    display: block;
+    padding: 10px;
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.pagination li a:hover {
+    color: #fff;
+    background-color: #007bff;
+}
+
+.pagination li.disabled {
+    color: #999;
+    pointer-events: none;
+}
+
+.pagination li span {
+    display: block;
+    padding: 10px;
+    color: #999;
+}
+
+

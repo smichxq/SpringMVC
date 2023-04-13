@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleay.org">
+<link rel="stylesheet" th:href="@{/css/css1.css}"/>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div class="container">
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>姓名</th>
+                <th>年龄</th>
+                <th>账号</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="userList:${usersList}">
+                <td th:text="${userList.userName}"></td>
+                <td th:text="${userList.userAge}"></td>
+                <td th:text="${userList.userAccount}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+</body>
+</html>
