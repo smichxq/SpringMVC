@@ -73,6 +73,15 @@ public class User {
         this.userBan = userBan;
     }
 
+    public boolean isUserBan() {
+        return userBan;
+    }
+
+    public User setUserBan(boolean userBan) {
+        this.userBan = userBan;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "User{" +

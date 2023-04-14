@@ -5,7 +5,7 @@ import org.springframework.util.DigestUtils;
 
 import java.util.UUID;
 
-public class util {
+public class CommonUtil {
 
     //随机字符串
     public static String UUID() {

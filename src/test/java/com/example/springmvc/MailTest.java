@@ -23,8 +23,11 @@ public class MailTest {
 
     @Test
     public void sendMail(){
-        mailClent.sendMailMessage("1070678891@qq.com","Test","context test");
+//        mailClent.sendMailMessage("1070678891@qq.com","Test","context test");
+//        mailClent.sendMailMessage("1070678891@qq.com","激活","请点击该链接激活: www.baidu.com");
+
     }
+
 
     @Test
     public void sendHtmlMail(){

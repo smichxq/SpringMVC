@@ -4,6 +4,7 @@ package com.example.springmvc.controller;
 import com.example.springmvc.entity.User;
 import com.example.springmvc.mapper.UserMapper;
 import com.example.springmvc.services.UserServices;
+import com.example.springmvc.util.MailClent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,16 +25,22 @@ public class LoginController {
     @Autowired
     private UserServices userServices;
 
-//    @RequestMapping(value = "/signup",method = RequestMethod.POST)
-//    @ResponseBody
-//    public Map<User,Integer> signUp(String account, String password, String name, String age) {
-//        User user = new User();
-//        Map<User,Integer> map = new HashMap();
-//        user.setUser(name,Integer.parseInt(age),password,account,false);
-//        int suc = userMapper.insertUser(user);
-//        map.put(user,Integer.valueOf(suc));
-//        return map;
-//    }
+    @Autowired
+    private MailClent mailClent;
+
+    @RequestMapping(value = "/signupcommit",method = RequestMethod.POST)
+    @ResponseBody
+    public String signUp(String account, String password, String name, String age) {
+        User user = new User();
+        user.setUser(name,Integer.parseInt(age),password,account,true);
+        if (userServices.userRegister(user)) {
+            System.out.println(user.getUserAccount());
+
+            mailClent.sendMailMessage(user.getUserAccount(),"激活","请点击该链接激活: www.baidu.com");
+            return "成功";
+        }
+        return "失败";
+    }
 
 
     @RequestMapping(value = "/signup", method = RequestMethod.GET)

@@ -3,6 +3,8 @@ package com.example.springmvc.services;
 
 import com.example.springmvc.entity.User;
 import com.example.springmvc.mapper.UserMapper;
+import com.example.springmvc.util.CommonUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,43 @@ public class UserServices {
         return userMapper.getUser(id);
     }
 
+
+
+
+    public boolean userRegister(User user) {
+
+        //提交后二次验证
+        Map<String,Object> map = userMessageCheck(user);
+
+        //user为空
+        if (!(boolean) map.get("canUse")) {
+            return false;
+        }
+
+        //姓名已存在
+        if ((boolean) map.get("user_name")) {
+            return false;
+        }
+
+        //账号已存在
+        if ((boolean) map.get("user_account")) {
+            return false;
+        }
+
+        //没有设置密码
+        if (StringUtils.isBlank(user.getUserPassword())) {
+            return false;
+        }
+
+        user.setUserSalt(CommonUtil.UUID().substring(0,5));
+
+        user.setUserPassword(CommonUtil.getMd5(user.getUserPassword() + user.getUserSalt()));
+
+        userMapper.insertUser(user);
+
+        return true;
+    }
+
     //传入注册时用户的填写内容，
     //返回<"isNull",trur/falsse> <"user_name",trur/falsse> <"user_account",trur/falsse>
     //先检查“isNull”，如果为true，则不包含后两项
@@ -41,11 +80,18 @@ public class UserServices {
         Map returnMap = new HashMap<String,Object>();
         if (user == null) {
 
-            returnMap.put("isNull",true);
+            returnMap.put("canUse",false);
+//            throw new IllegalArgumentException("UserServices.userMessageCheck(User): User为空");
             return returnMap;
         }
 
-        else {returnMap.put("isNull",false);}
+         returnMap.put("canUse",true);
+
+
+
+
+
+
 
         //返回<"user_name","value"> , <"user_account", "value">
         //一个键值对对应一个Map对象
@@ -88,17 +134,6 @@ public class UserServices {
             }
 
 
-
-
-//            for (String s:
-//                    resultMap.keySet()) {
-//                if (s.equals("user_account") && !((resultMap.get(user.getUserAccount())).isEmpty())) {
-//                    returnMap.put("user_account",true);
-//                }
-//                if (s.equals("user_name") && !((resultMap.get(user.getUserName())).isEmpty())) {
-//                    returnMap.put("user_name",true);
-//                }
-//            }
         }
 
         //不存在
@@ -122,7 +157,7 @@ public class UserServices {
         );
 
         Map<String,Object> map = userMessageCheck(user);
-        if ((boolean) map.get("user_account")){
+        if ((boolean) map.get("user_account")  && (boolean) map.get("canUse")){
             return true;
         }
         return false;
@@ -140,7 +175,7 @@ public class UserServices {
         );
 
         Map<String,Object> map = userMessageCheck(user);
-        if ((boolean) map.get("user_name")){
+        if ((boolean) map.get("user_name") && (boolean) map.get("canUse")){
             return true;
         }
         return false;

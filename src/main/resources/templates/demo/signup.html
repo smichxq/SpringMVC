@@ -8,61 +8,30 @@
     <link rel="stylesheet" th:href="@{/css/signup.css}">
 </head>
 
-<!--<body>-->
-
-<!--<form method="post" action="/community/login/signup">-->
-<!--    <div>-->
-<!--        <p>-->
-<!--            账号: <input type="text" name="account"/><span id="accountTip"></span>-->
-<!--        </p>-->
-
-<!--    </div>-->
-
-<!--    <div>-->
-<!--        <p>-->
-<!--            姓名:<input type="text" name="name"/><span id="nameTip"></span>-->
-<!--        </p>-->
-<!--    </div>-->
-
-
-<!--    <p>-->
-<!--        密码: <input type="text" name="password"/>-->
-<!--    </p>-->
-
-
-
-
-<!--    <p>-->
-<!--        年龄: <input type="text" name="age"/>-->
-<!--    </p>-->
-
-<!--    <p>-->
-<!--        <input type="submit" value="提交"/>-->
-<!--    </p>-->
-
-<!--</form>-->
-
-
-
-<!--</body>-->
-
 <body>
 
 <h1>注册</h1>
 
 <div id="login">
 
-    <form method="post" action="/community/login/signup">
+    <form method="post" action="/community/login/signupcommit">
 
-        <label for="account">账号:</label>
+        <div>
+            <label for="account">账号:</label>
+            <span id="accountTip" class="error"></span>
+        </div>
+
         <input type="text" id="account" name="account" />
 
-        <span id="accountTip" class="error"></span>
 
-        <label for="name">姓名:</label>
+        <div>
+            <label for="name">姓名:</label>
+            <span id="nameTip" class="error"></span>
+        </div>
+
         <input type="text" id="name" name="name" />
 
-        <span id="nameTip" class="error"></span>
+
 
         <label for="password">密码:</label>
         <input type="password" id="password" name="password" />
