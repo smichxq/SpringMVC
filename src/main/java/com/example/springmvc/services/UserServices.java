@@ -54,6 +54,7 @@ public class UserServices {
         //已存在
         if (!lists.isEmpty()) {
 
+            //{<>},{<>},{<>}
             for (Map<String,String> map:
                  lists) {
                 if (map.get("user_account").equals(user.getUserAccount())) {
@@ -107,6 +108,42 @@ public class UserServices {
         }
 
         return returnMap;
+
+    }
+
+    public boolean checkUserByAccount(String userAcc) {
+        User user = new User();
+        user.setUser(
+                "",
+                0,
+                "",
+                userAcc,
+                false
+        );
+
+        Map<String,Object> map = userMessageCheck(user);
+        if ((boolean) map.get("user_account")){
+            return true;
+        }
+        return false;
+
+    }
+
+    public boolean checkUserByName(String userName) {
+        User user = new User();
+        user.setUser(
+                userName,
+                0,
+                "",
+                "",
+                false
+        );
+
+        Map<String,Object> map = userMessageCheck(user);
+        if ((boolean) map.get("user_name")){
+            return true;
+        }
+        return false;
 
     }
 

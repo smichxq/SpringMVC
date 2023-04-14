@@ -13,6 +13,8 @@ public class User {
     private String userAccount;
     private boolean userBan;
 
+    private String userSalt;
+
 
     public void setUser(String userName, int userAge, String userPassword, String userAccount, boolean userBan) {
 
@@ -79,7 +81,17 @@ public class User {
                 ", userAge=" + userAge +
                 ", userPassword='" + userPassword + '\'' +
                 ", userAccount='" + userAccount + '\'' +
-                ", Ban=" + userBan +
+                ", userBan=" + userBan +
+                ", userSalt='" + userSalt + '\'' +
                 '}';
+    }
+
+    public String getUserSalt() {
+        return userSalt;
+    }
+
+    public User setUserSalt(String userSalt) {
+        this.userSalt = userSalt;
+        return this;
     }
 }

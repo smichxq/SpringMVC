@@ -6,7 +6,7 @@ import com.example.springmvc.mapper.UserMapper;
 import com.example.springmvc.services.PageSet;
 import com.example.springmvc.services.RandomGenerate;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,40 +1,81 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
+
 <head>
     <meta charset="UTF-8">
-    <title>Welcome</title>
+    <title>注册</title>
+    <link rel="stylesheet" th:href="@{/css/signup.css}">
 </head>
+
+<!--<body>-->
+
+<!--<form method="post" action="/community/login/signup">-->
+<!--    <div>-->
+<!--        <p>-->
+<!--            账号: <input type="text" name="account"/><span id="accountTip"></span>-->
+<!--        </p>-->
+
+<!--    </div>-->
+
+<!--    <div>-->
+<!--        <p>-->
+<!--            姓名:<input type="text" name="name"/><span id="nameTip"></span>-->
+<!--        </p>-->
+<!--    </div>-->
+
+
+<!--    <p>-->
+<!--        密码: <input type="text" name="password"/>-->
+<!--    </p>-->
+
+
+
+
+<!--    <p>-->
+<!--        年龄: <input type="text" name="age"/>-->
+<!--    </p>-->
+
+<!--    <p>-->
+<!--        <input type="submit" value="提交"/>-->
+<!--    </p>-->
+
+<!--</form>-->
+
+
+
+<!--</body>-->
+
 <body>
 
-<form method="post" action="/community/login/signup">
-    <p>
-        账号: <input type="text" name="account">
-    </p>
+<h1>注册</h1>
 
-    <p>
-        密码: <input type="text" name="password">
-    </p>
+<div id="login">
 
-    <p>
-        姓名:<input type="text" name="name">
-    </p>
+    <form method="post" action="/community/login/signup">
 
-    <p>
-        年龄: <input type="text" name="age">
-    </p>
+        <label for="account">账号:</label>
+        <input type="text" id="account" name="account" />
 
-    <p>
-        账号: <input type="text" name="account">
-    </p>
+        <span id="accountTip" class="error"></span>
 
-    <p>
-        <input type="submit" value="提交">
-    </p>
+        <label for="name">姓名:</label>
+        <input type="text" id="name" name="name" />
 
-</form>
+        <span id="nameTip" class="error"></span>
 
+        <label for="password">密码:</label>
+        <input type="password" id="password" name="password" />
 
+        <label for="age">年龄:</label>
+        <input type="text" id="age" name="age" />
+
+        <input type="submit" value="提交" />
+
+    </form>
+
+</div>
 
 </body>
+<script th:src="@{/js/signup.js}"></script>
 </html>
