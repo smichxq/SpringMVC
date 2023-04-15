@@ -23,7 +23,8 @@ public interface UserMapper {
 
     User getUser(int userId);
 
-    int getUserCount();
+    // 传入每页限制长度，返回有多少页
+    int getUserCountDevide(int limit);
 
     int userCheckByAccount(String userAcc);
 
