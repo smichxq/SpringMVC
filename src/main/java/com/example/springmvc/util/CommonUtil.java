@@ -20,4 +20,11 @@ public class CommonUtil {
         if (StringUtils.isBlank(str)){return null;}
         return DigestUtils.md5DigestAsHex(str.getBytes());
     }
+
+    public static boolean isNum(String str) {
+        if (StringUtils.isNumeric(str)) {
+            return true;
+        }
+        return false;
+    }
 }

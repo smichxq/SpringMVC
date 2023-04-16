@@ -41,7 +41,7 @@ public class MapperTest implements ApplicationContextAware {
 //        homeController.getUsers(new ConcurrentModel());
 //        for (int i = 0; i<101; i++){
 //            user = new User();
-//
+
 //            user.setUser(
 //                RandomGenerate.generateString(8),
 //                RandomGenerate.generateInt(0,99),
@@ -57,10 +57,10 @@ public class MapperTest implements ApplicationContextAware {
 
 //        System.out.println(user.toString());
 
-//        System.out.println(userMapper.deleteUser(3));
+//        System.out.println(userMapper.deleteUser(2));
 
-//        userMapper.updateAge(4,100);
-//        userMapper.updateName(4,"sergg");
+//        userMapper.updateAge(4,10);
+//        userMapper.updateName(4,"sedfffrgg");
 
 //        System.out.println(userMapper.getUser(7).toString());
 //        List<User> users = userMapper.getUsers();
@@ -69,11 +69,15 @@ public class MapperTest implements ApplicationContextAware {
 //            System.out.println(user.toString());
 //        }
 
-        List<User> users = userMapper.getUsersForLimit(pageSet.getSIZE(),pageSet.getCurrentPage());
-        for (User user:
-                users) {
-            System.out.println(user.toString());
-        }
+//        List<User> users = userMapper.getUsersForLimit(pageSet.getSIZE(),pageSet.getCurrentPage());
+//        for (User user:
+//                users) {
+//            System.out.println(user.toString());
+//        }
+
+//        System.out.println(userMapper.getUserCountDevide(10));
+        System.out.println(userMapper.userCheckByAccount("zrpnq"));
+
 
     }
 

@@ -3,6 +3,7 @@ package com.example.springmvc.controller;
 import com.example.springmvc.entity.User;
 import com.example.springmvc.mapper.UserMapper;
 import com.example.springmvc.services.PageSet;
+import com.example.springmvc.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,14 +26,44 @@ public class HomeController {
 
     @RequestMapping(value = "allusers",method = RequestMethod.GET)
 //    @ResponseBody
-    public String getUsers(Model model, @RequestParam(value = "p",required = false,defaultValue = "1") int page) {
+    //未解决的问题：p=非数字
+    public String getUsers(Model model, @RequestParam(value = "p",required = false,defaultValue = "1") String page) {
 //        ArrayList<User> listuser =  userMapper.getUsers();
-        if (page == 1) {
-            pageSet.setPageTotal(userMapper.getUserCount());
-        }
-        pageSet.setCurrentPage(page);
+        ArrayList<User> listuser = null;
+        int pageInt;
 
-        ArrayList<User> listuser =  userMapper.getUsersForLimit(pageSet.getSIZE(),(pageSet.getCurrentPage()-1)*10);
+        if (CommonUtil.isNum(page)) {
+            pageInt = Integer.parseInt(page);
+        }
+
+        else {
+            model.addAttribute("canUse",false);
+            return "/demo/alluser";
+        }
+
+
+        if (pageInt == 1) {
+            pageSet.setPageTotal(userMapper.getUserCountDevide(10));
+            System.out.println();
+        }
+
+        if (pageInt > pageSet.getPageTotal() || pageInt <= 0) {
+            model.addAttribute("canUse",false);
+            return "/demo/alluser";
+        }
+
+        else {
+
+            model.addAttribute("canUse",true);
+        }
+
+        pageSet.setCurrentPage(pageInt);
+
+        if (pageInt > 0 && pageInt <= pageSet.getPageTotal()) {
+
+            listuser = userMapper.getUsersForLimit(pageSet.getSIZE(), (pageSet.getCurrentPage() - 1) * 10);
+
+        }
 
 
         if (listuser != null) {
@@ -40,8 +71,6 @@ public class HomeController {
             model.addAttribute("page",pageSet);
 
         }
-
-
 
 
         return "/demo/alluser";

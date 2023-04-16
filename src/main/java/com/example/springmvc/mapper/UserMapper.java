@@ -9,7 +9,7 @@ import java.util.Map;
 
 @Mapper
 public interface UserMapper {
-    int insertUser(@Param("user") User user);
+    int insertUser(User user);
 
     int deleteUser(@Param("userId") int userId);
 

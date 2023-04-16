@@ -3,6 +3,7 @@ package com.example.springmvc;
 
 import com.example.springmvc.Prac.Hello;
 import com.example.springmvc.demo.A;
+import com.example.springmvc.util.CommonUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.BeansException;
@@ -28,6 +29,14 @@ class SpringMvcApplicationTests implements ApplicationContextAware {
 
         Hello hello = (Hello) applicationContext.getBean(Hello.class);
         hello.aMethod();
+    }
+
+    @Test
+    public void rr() {
+        System.out.println(CommonUtil.isNum("saff"));
+        System.out.println(CommonUtil.isNum("35"));
+        System.out.println(CommonUtil.isNum("45gb"));
+
     }
 
 

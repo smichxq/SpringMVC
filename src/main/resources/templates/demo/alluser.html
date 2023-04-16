@@ -7,7 +7,7 @@
 </head>
 <body>
 
-<div class="container">
+<div class="container" th:if="${canUse}">
     <div class="table-responsive">
         <table class="table">
             <thead>
@@ -25,16 +25,23 @@
             </tr>
             </tbody>
         </table>
+
     </div>
+
+    <button id="myButtonNext" th:if="${page.currentPage} < ${page.pageTotal}" >下一页</button>
+
+    <div th:each="pageNumber : ${#numbers.sequence(1, page.pageTotal)}">
+        <a th:text="${pageNumber}" th:href="@{'http://localhost:8080/community/home/allusers?p=' + ${pageNumber}}"></a>
+    </div>
+    <button id="myButtonBefore" th:if="${page.currentPage} > 1">上一页</button>
+
+</div>
+
+<div class="container" th:unless="${canUse}">
+<h1>错误的页码</h1>
 </div>
 
 
-
-
-
-
-
-
-
 </body>
+<script th:src="@{/js/homepage.js}"></script>
 </html>

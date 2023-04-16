@@ -1,16 +1,40 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>Title</title>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/css1.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#table-pagination').DataTable({
+                "pagingType": "full_numbers"
+            });
+        });
+    </script>
 </head>
 <body>
-
-<div th:each="userList:${usersList}">
-    <p th:text="${userList.userName}"></p>
-    <p th:text="${userList.userAge}"></p>
-    <p th:text="${userList.userAccount}"></p>
+<div class="container">
+    <div class="table-responsive">
+        <table id="table-pagination" class="table">
+            <thead>
+            <tr>
+                <th>姓名</th>
+                <th>年龄</th>
+                <th>账号</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="userList:${usersList}">
+                <td th:text="${userList.userName}"></td>
+                <td th:text="${userList.userAge}"></td>
+                <td th:text="${userList.userAccount}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
-
 </body>
 </html>

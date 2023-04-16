@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper>
-<mapper namespace="mapper路径，用来对应哪个Mapper">
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springmvc.mapper.UserMapper">
 
 
-    <insert id="insertUser" paramaterType="User" KeyProperty="userId">
+    <insert id="insertUser">
         insert into person (user_name, user_age, user_password, user_account, user_salt, user_ban)
-        values (#{userName},#{userAge}, #{userPassword}, #{userAccount}, #{userSalt}, #{userBan})
-    </insert>>
+        values (#{userName}, #{userAge}, #{userPassword}, #{userAccount}, #{userSalt}, #{userBan})
+    </insert>
 
     <update id="deleteUser">
         delete from person
@@ -30,9 +32,9 @@
         select * from person
     </select>
 
-    <select id="getUserForLimit" resultType="User">
+    <select id="getUsersForLimit" resultType="User">
         select * from person
-        limit #{limit} offset #{offset}
+        limit  #{limit} offset  #{offset}
     </select>
 
     <select id="getUser" resultType="User">
@@ -42,6 +44,18 @@
 
     <select id="getUserCountDevide" resultType="int">
         select ceil(count(*) / #{limit}) as totalPage from person
+    </select>
+
+
+    <select id="userCheckByAccount" resultType="int">
+        select user_account from person
+        where user_account = #{userAcc}
+    </select>
+
+
+    <select id="userCheckByAccName" resultType="hashmap">
+        select (user_name, user_account) from person
+        where user_name = #{userName} or user_account = #{userAcc}
     </select>
 
 
