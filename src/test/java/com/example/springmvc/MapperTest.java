@@ -40,22 +40,25 @@ public class MapperTest implements ApplicationContextAware {
     public void test(){
 //        homeController.getUsers(new ConcurrentModel());
 //        for (int i = 0; i<101; i++){
-//            user = new User();
+            user = new User();
 
-//            user.setUser(
-//                RandomGenerate.generateString(8),
-//                RandomGenerate.generateInt(0,99),
-//                RandomGenerate.generateString(10),
-//                RandomGenerate.generateString(5),
-//                false
-//        );
+            user.setUser(
+                RandomGenerate.generateString(8),
+                RandomGenerate.generateInt(0,99),
+                RandomGenerate.generateString(10),
+                RandomGenerate.generateString(5),
+                false,
+                    "",
+                    false
+
+        );
 //
 //
-//        userMapper.insertUser(user);
+        userMapper.insertUser(user);
 //
 //        }
 
-//        System.out.println(user.toString());
+        System.out.println(user.toString());
 
 //        System.out.println(userMapper.deleteUser(2));
 
@@ -76,7 +79,7 @@ public class MapperTest implements ApplicationContextAware {
 //        }
 
 //        System.out.println(userMapper.getUserCountDevide(10));
-        System.out.println(userMapper.userCheckByAccount("zrpnq"));
+//        System.out.println(userMapper.userCheckByAccount("zrpnq"));
 
 
     }

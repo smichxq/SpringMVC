@@ -5,9 +5,9 @@
 <mapper namespace="com.example.springmvc.mapper.UserMapper">
 
 
-    <insert id="insertUser">
-        insert into person (user_name, user_age, user_password, user_account, user_salt, user_ban)
-        values (#{userName}, #{userAge}, #{userPassword}, #{userAccount}, #{userSalt}, #{userBan})
+    <insert id="insertUser" keyProperty="userId">
+        insert into person (user_name, user_age, user_password, user_account, user_salt, user_ban, user_activitycode, user_status)
+        values (#{userName}, #{userAge}, #{userPassword}, #{userAccount}, #{userSalt}, #{userBan}, #{userActivityCode}, #{userStatus})
     </insert>
 
     <update id="deleteUser">

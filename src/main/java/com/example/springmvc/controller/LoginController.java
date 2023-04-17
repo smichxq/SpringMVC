@@ -31,12 +31,12 @@ public class LoginController {
     @RequestMapping(value = "/signupcommit",method = RequestMethod.POST)
     @ResponseBody
     public String signUp(String account, String password, String name, String age) {
-        User user = new User();
-        user.setUser(name,Integer.parseInt(age),password,account,true);
-        if (userServices.userRegister(user)) {
-            System.out.println(user.getUserAccount());
+//        User user = new User();
+//        user.setUser("",name,Integer.parseInt(age),password,account,true,"",);
+        if (userServices.userRegister(account,password,name,age)) {
+//            System.out.println(user.getUserAccount());
 
-            mailClent.sendMailMessage(user.getUserAccount(),"激活","请点击该链接激活: www.baidu.com");
+            mailClent.sendMailMessage(account,"激活","请点击该链接激活: www.baidu.com");
             return "成功";
         }
         return "失败";

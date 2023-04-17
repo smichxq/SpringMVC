@@ -15,14 +15,21 @@ public class User {
 
     private String userSalt;
 
+    private String userActivityCode;
 
-    public void setUser(String userName, int userAge, String userPassword, String userAccount, boolean userBan) {
 
+    private boolean userStatus;
+
+
+    public void setUser(String userName, int userAge, String userPassword, String userAccount, boolean userBan, String userActivityCode, boolean userStatus) {
+//        this.userId = userId;
         this.userName = userName;
         this.userAge = userAge;
         this.userPassword = userPassword;
         this.userAccount = userAccount;
         this.userBan = userBan;
+        this.userActivityCode = userActivityCode;
+        this.userStatus = userStatus;
     }
 
     public int getUserId() {
@@ -92,6 +99,8 @@ public class User {
                 ", userAccount='" + userAccount + '\'' +
                 ", userBan=" + userBan +
                 ", userSalt='" + userSalt + '\'' +
+                ", userActivityCode='" + userActivityCode + '\'' +
+                ", userStatus=" + userStatus +
                 '}';
     }
 
@@ -101,6 +110,24 @@ public class User {
 
     public User setUserSalt(String userSalt) {
         this.userSalt = userSalt;
+        return this;
+    }
+
+    public String getUserActivityCode() {
+        return userActivityCode;
+    }
+
+    public User setUserActivityCode(String userActivityCode) {
+        this.userActivityCode = userActivityCode;
+        return this;
+    }
+
+    public boolean isUserStatus() {
+        return userStatus;
+    }
+
+    public User setUserStatus(boolean userStatus) {
+        this.userStatus = userStatus;
         return this;
     }
 }

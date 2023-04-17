@@ -35,7 +35,10 @@ public class UserServices {
 
 
 
-    public boolean userRegister(User user) {
+    public boolean userRegister(String account, String password, String name, String age) {
+        User user = new User();
+        user.setUserAccount(account);
+        user.setUserName(name);
 
         //提交后二次验证
         Map<String,Object> map = userMessageCheck(user);
@@ -60,13 +63,24 @@ public class UserServices {
             return false;
         }
 
+
+
         user.setUserSalt(CommonUtil.UUID().substring(0,5));
 
         user.setUserPassword(CommonUtil.getMd5(user.getUserPassword() + user.getUserSalt()));
 
+        user.setUserActivityCode(CommonUtil.UUID());
+
         userMapper.insertUser(user);
 
         return true;
+    }
+
+
+    public void mailActivity(String activityCode) {
+        //localhost:8080/community/
+        String domain = this.domain;
+        String path = this.path;
     }
 
     //传入注册时用户的填写内容，
@@ -153,6 +167,8 @@ public class UserServices {
                 0,
                 "",
                 userAcc,
+                false,
+                "",
                 false
         );
 
@@ -170,6 +186,8 @@ public class UserServices {
                 userName,
                 0,
                 "",
+                "",
+                false,
                 "",
                 false
         );
