@@ -54,7 +54,7 @@
 
 
     <select id="userCheckByAccName" resultType="hashmap">
-        select (user_name, user_account) from person
+        select user_name, user_account from person
         where user_name = #{userName} or user_account = #{userAcc}
     </select>
 

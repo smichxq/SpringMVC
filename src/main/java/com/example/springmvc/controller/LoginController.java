@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,21 +26,40 @@ public class LoginController {
     @Autowired
     private UserServices userServices;
 
-    @Autowired
-    private MailClent mailClent;
+
+
+
+    @RequestMapping(value = "/activation",method = RequestMethod.GET)
+    public String userActivity(@RequestParam("i") String userId,@RequestParam("c") String activityCode,Model model) {
+
+        int userId_Int = Integer.parseInt(userId);
+
+        User user = userMapper.getUser(userId_Int);
+        if (user.getUserId() == userId_Int && user.getUserActivityCode().equals(activityCode)) {
+             model.addAttribute("activityStatue",true);
+             model.addAttribute("userId",userId);
+        }
+        else {
+            model.addAttribute("activityStatue",false);
+        }
+        return "/demo/activity";
+    }
 
     @RequestMapping(value = "/signupcommit",method = RequestMethod.POST)
     @ResponseBody
     public String signUp(String account, String password, String name, String age) {
 //        User user = new User();
 //        user.setUser("",name,Integer.parseInt(age),password,account,true,"",);
-        if (userServices.userRegister(account,password,name,age)) {
+        Map<String,Object> map = userServices.userRegister(account,password,name,Integer.parseInt(age));
+        if ((boolean)(map.get("canUse"))) {
 //            System.out.println(user.getUserAccount());
 
-            mailClent.sendMailMessage(account,"激活","请点击该链接激活: www.baidu.com");
-            return "成功";
+//            mailClent.sendMailMessage(account,"激活","请点击该链接激活: www.baidu.com");
+//            return "redirect:" + "/activation?" + "i=" +  map.get("userId") + "&" + "c=" + map.get("userActivityCode");
+            return  "成功，请打开邮箱激活";
         }
         return "失败";
+//        return  new RedirectView("/activation");
     }
 
 

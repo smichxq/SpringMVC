@@ -3,6 +3,7 @@ package com.example.springmvc;
 
 import com.example.springmvc.entity.User;
 import com.example.springmvc.services.UserServices;
+import jakarta.mail.MessagingException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,20 +23,20 @@ public class UserServicesTest {
 
     @Test
     public void test() {
-        User userExist = new User();
-        userExist.setUser(
-                "uddxvklu",
-                23,
-                "sadsad",
-                "ptlwj",
-                false,
-                "",
-                false
-
-
-        );
-        System.out.println(userServices.checkUserByAccount("ptlw2j"));
-        System.out.println(userServices.checkUserByName("uddx2vklu"));
+//        User userExist = new User();
+//        userExist.setUser(
+//                "uddxvklu",
+//                23,
+//                "sadsad",
+//                "ptlwj",
+//                false,
+//                "",
+//                false
+//
+//
+//        );
+//        System.out.println(userServices.checkUserByAccount("ptlw2j"));
+//        System.out.println(userServices.checkUserByName("uddx2vklu"));
 //        Map<String, Object> maps = userServices.userMessageCheck(userExist);
 //        System.out.println("mapSize: " + maps.size());
 //        if (!maps.isEmpty()) {
@@ -47,6 +48,13 @@ public class UserServicesTest {
 //                System.out.println("user_Account:" + maps.get("user_account"));
 //            }
 //
+//        }
+
+//        System.out.println(userServices.userRegister("1070678891@qq.com", "214", "smith", 22));
+//        try {
+//            userServices.mailActivity("1070678891@qq.com","sxmith",22,"dsadg");
+//        } catch (MessagingException e) {
+//            throw new RuntimeException(e);
 //        }
     }
 }

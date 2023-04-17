@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleay.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>等待激活</title>
+</head>
+<body>
+<div th:if="${activityStatue}">
+    <h1 th:text="${userId}">欢迎你</h1>
+    <h1>已激活，请登录</h1>
+</div>
+<div th:unless="${activityStatue}">
+    <h1>非法连接</h1>>
+</div>
+</body>
+</html>

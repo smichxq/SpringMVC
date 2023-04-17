@@ -4,17 +4,21 @@ package com.example.springmvc.services;
 import com.example.springmvc.entity.User;
 import com.example.springmvc.mapper.UserMapper;
 import com.example.springmvc.util.CommonUtil;
+import com.example.springmvc.util.MailClent;
+import jakarta.mail.MessagingException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 @Service
-public class UserServices {
+public class UserServices extends Thread{
 
     @Autowired
     private UserMapper userMapper;
@@ -27,6 +31,9 @@ public class UserServices {
     @Value("${server.servlet.context-path}")
     private String path;
 
+    @Autowired
+    private MailClent mailClent;
+
 
     public User getUserById(int id) {
         return userMapper.getUser(id);
@@ -35,53 +42,85 @@ public class UserServices {
 
 
 
-    public boolean userRegister(String account, String password, String name, String age) {
+//    @Async("mailExecutor")
+    public Map<String,Object> userRegister(String account, String password, String name, int age) {
+        Map<String,Object> returnMap = new HashMap();
         User user = new User();
         user.setUserAccount(account);
         user.setUserName(name);
+        user.setUserAge(age);
+        user.setUserPassword(password);
 
         //提交后二次验证
         Map<String,Object> map = userMessageCheck(user);
 
         //user为空
         if (!(boolean) map.get("canUse")) {
-            return false;
+            returnMap.put("canUse",false);
+            return returnMap;
+//            return false;
         }
 
         //姓名已存在
         if ((boolean) map.get("user_name")) {
-            return false;
+            returnMap.put("canUse",false);
+            return returnMap;
+//            return false;
         }
 
         //账号已存在
         if ((boolean) map.get("user_account")) {
-            return false;
+            returnMap.put("canUse",false);
+            return returnMap;
+//            return false;
         }
 
         //没有设置密码
         if (StringUtils.isBlank(user.getUserPassword())) {
-            return false;
+            returnMap.put("canUse",false);
+            return returnMap;
+//            return false;
         }
 
 
 
         user.setUserSalt(CommonUtil.UUID().substring(0,5));
 
-        user.setUserPassword(CommonUtil.getMd5(user.getUserPassword() + user.getUserSalt()));
+        user.setUserPassword(CommonUtil.getMd5(password + user.getUserSalt()));
 
         user.setUserActivityCode(CommonUtil.UUID());
 
-        userMapper.insertUser(user);
+        if (userMapper.insertUser(user) == 1) {
+            try {
+                mailActivity(user.getUserAccount(),user.getUserName(),user.getUserId(),user.getUserActivityCode());
+            } catch (MessagingException e) {
 
-        return true;
+                throw new RuntimeException(e);
+            }
+//            return CompletableFuture.completedFuture("mailExecutor Done!");
+            returnMap.put("canUse",true);
+            returnMap.put("userActivityCode",user.getUserActivityCode());
+            returnMap.put("userId",user.getUserId());
+            return returnMap;
+//            return true;
+        }
+
+//        return CompletableFuture.completedFuture("mailExecutor Done!");
+        returnMap.put("canUse",false);
+        return returnMap;
+//        return false;
     }
 
 
-    public void mailActivity(String activityCode) {
+
+    public void mailActivity(String userAccount, String userName, int userId, String activityCode) throws MessagingException {
         //localhost:8080/community/
-        String domain = this.domain;
-        String path = this.path;
+        String activityUrl = domain + path + "/login/activation?" + "i=" + userId + "&" + "c=" + activityCode;
+        mailClent.sendHtmlMail(userAccount,"激活",userName,activityUrl);
+
     }
+
+
 
     //传入注册时用户的填写内容，
     //返回<"isNull",trur/falsse> <"user_name",trur/falsse> <"user_account",trur/falsse>
