@@ -17,7 +17,8 @@ public class CookieDemo {
     @RequestMapping(value = "/set",method = RequestMethod.GET)
     @ResponseBody
     public String setCookie(HttpServletResponse response) {
-        Cookie cookie = new Cookie("currentcok", CommonUtil.UUID().substring(0,8));
+//        Cookie cookie = new Cookie("currentcok", CommonUtil.UUID().substring(0,8));
+        Cookie cookie = new Cookie(" "," ");
         cookie.setPath("/community/cookie");
         //设置失效时间，使用持久化存放
 //        cookie.setMaxAge(60 * 10);
@@ -35,8 +36,8 @@ public class CookieDemo {
     @RequestMapping(value = "/session/set",method = RequestMethod.GET)
     @ResponseBody
     public String setSession(HttpSession session) {
-        session.setAttribute("name","session1");
-        session.setAttribute("value",1);
+        session.setAttribute("name","session");
+        session.setAttribute("value: ",CommonUtil.UUID());
         return "set session";
     }
 

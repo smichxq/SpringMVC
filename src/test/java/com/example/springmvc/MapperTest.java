@@ -1,11 +1,14 @@
 package com.example.springmvc;
 
 import com.example.springmvc.controller.HomeController;
+import com.example.springmvc.entity.LoginTicket;
 import com.example.springmvc.entity.User;
+import com.example.springmvc.mapper.LoginTicketMapper;
 import com.example.springmvc.mapper.UserMapper;
 import com.example.springmvc.services.PageSet;
 import com.example.springmvc.services.RandomGenerate;
 
+import com.example.springmvc.util.CommonUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.BeansException;
@@ -18,6 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
 
+import java.util.Date;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -35,6 +39,9 @@ public class MapperTest implements ApplicationContextAware {
 
     @Autowired
     private PageSet pageSet;
+
+    @Autowired
+    private LoginTicketMapper loginTicketMapper;
 
     @Test
     public void test(){
@@ -82,6 +89,24 @@ public class MapperTest implements ApplicationContextAware {
 //        System.out.println(userMapper.userCheckByAccount("zrpnq"));
 
 
+    }
+
+    @Test
+    public void loginMapperTest() {
+        String ticket = CommonUtil.UUID().substring(0,6);
+        LoginTicket loginTicket = new LoginTicket();
+        loginTicket.setTicket(ticket);
+        loginTicket.setExpired(new Date(System.currentTimeMillis() + 1000 * 60));
+//        loginTicket.setId(2);
+        loginTicket.setStatus(0);
+        loginTicket.setUserId(2);
+        loginTicketMapper.insertLoginTicket(loginTicket);
+        System.out.println("-----------");
+        System.out.println(loginTicketMapper.selectLoginTicketByTicket(ticket).toString());
+        System.out.println("------------");
+        loginTicketMapper.updateStatus(ticket,1);
+        System.out.println("------------");
+        System.out.println(loginTicketMapper.selectLoginTicketByTicket(ticket).toString());
     }
 
 

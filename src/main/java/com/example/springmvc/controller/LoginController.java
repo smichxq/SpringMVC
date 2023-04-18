@@ -1,11 +1,19 @@
 package com.example.springmvc.controller;
 
 
+import com.example.springmvc.entity.LoginTicket;
 import com.example.springmvc.entity.User;
 import com.example.springmvc.mapper.UserMapper;
 import com.example.springmvc.services.UserServices;
 import com.example.springmvc.util.MailClent;
+import com.google.code.kaptcha.Producer;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,17 +22,37 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.imageio.ImageIO;
+import javax.servlet.http.Cookie;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.http.HttpResponse;
 import java.util.HashMap;
 import java.util.Map;
 
-@Controller()
+@Controller
 @RequestMapping("/login")
 public class LoginController {
+
+//    private static int count = 0;
     @Autowired
     private UserMapper userMapper;
 
     @Autowired
     private UserServices userServices;
+
+    @Autowired
+    private Producer producer;
+
+    @Value("${server.servlet.context-path}")
+    private String contextPath;
+
+    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+
+//    public LoginController() {
+//        count++;
+//    }
 
 
 
@@ -94,6 +122,95 @@ public class LoginController {
             return "{\"success\": true, \"message\": \"该名字可用\"}";
         }
 
+
+    }
+
+    @RequestMapping(value = "/kaptcha", method = RequestMethod.GET)
+    public void getKaptcha(HttpServletResponse httpServletResponse, HttpSession session) {
+        //验证码
+        String text = producer.createText();
+        BufferedImage image = producer.createImage(text);
+
+        //验证码存入session以便记录档次当此状态
+        //只要当前浏览器保存验证码，那么session会在该Controller类可访问
+        session.setAttribute("kaptcha",text);
+
+        //图片输出给浏览器
+        httpServletResponse.setContentType("image/png");
+
+        try {
+            OutputStream out = httpServletResponse.getOutputStream();
+
+            ImageIO.write(image, "png", out);
+        } catch (IOException e) {
+            logger.error("验证码响应失败: " + e.getMessage());
+        }
+    }
+
+    //用来转到用户登录页面
+    @RequestMapping(value = "/presigin", method = RequestMethod.GET)
+    public String preUserSignin() {
+
+//        count++;
+//        System.out.println(count);
+        return "/demo/login";
+    }
+
+
+    //处理用户登录
+    @RequestMapping(value = "/signin", method = RequestMethod.POST)
+    public String userSignin(String account, String password, String code, boolean rememberMe, Model model, HttpSession session, javax.servlet.http.HttpServletResponse response) {
+        String kaptcha =(String) session.getAttribute("kaptcha");
+
+        //UserServices.userLogin方法返回值
+        Map<String,Object> map = null;
+
+
+        //浏览器传入的验证码为空、session保存的验证码未空、传入的验证码错误(不区分大小写)
+        if (StringUtils.isBlank(code) || StringUtils.isBlank(kaptcha) || !kaptcha.equalsIgnoreCase(code)) {
+            model.addAttribute("codeMsg", "验证码错误");
+            return "登录模板对应处理";
+        }
+
+        //remberMe用来选择是否免登录，即服务端记录用户登录凭证时间
+//        if (rememberMe) {
+//            //有效期30天
+//            map = userServices.userLogin(account,password,1000 * 60 * 60 * 24 * 30);
+//        }
+//        else {
+//            //有效期1天
+//            map = userServices.userLogin(account,password,1000 * 60 * 60 * 24 * 1);
+//        }
+
+        //上面等效替代
+        int expired = rememberMe?1000 * 60 * 60 * 24 * 30:1000 * 60 * 60 * 24 * 1;
+
+        map = userServices.userLogin(account,password,expired);
+
+        //登陆成功，Services已经注册凭证
+        if (map.containsKey("loginTicket")) {
+            //让浏览器接收凭证
+            Cookie cookie = new Cookie("ticket",((LoginTicket) map.get("loginTicket")).getTicket());
+            //Cookie生效范围，登陆后一般是整个项目都可
+            cookie.setPath(contextPath);
+            cookie.setMaxAge(expired);
+            response.addCookie(cookie);
+
+
+            return "重定向至登陆成功页面";
+
+        }
+        else {
+            return "返回错误信息，提示用户重新输入";
+        }
+
+
+
+
+
+
+
+        return "";
 
     }
 

@@ -59,6 +59,12 @@
     </select>
 
 
+    <select id="getUserByAccount" resultType="User">
+        select * from person
+        where user_account=#{userAccount}
+    </select>
+
+
 
 
 

@@ -26,7 +26,7 @@ public class HomeController {
 
     @RequestMapping(value = "allusers",method = RequestMethod.GET)
 //    @ResponseBody
-    //未解决的问题：p=非数字
+
     public String getUsers(Model model, @RequestParam(value = "p",required = false,defaultValue = "1") String page) {
 //        ArrayList<User> listuser =  userMapper.getUsers();
         ArrayList<User> listuser = null;
@@ -41,7 +41,7 @@ public class HomeController {
             return "/demo/alluser";
         }
 
-
+        //第一次访问时默认是第一页
         if (pageInt == 1) {
             pageSet.setPageTotal(userMapper.getUserCountDevide(10));
             System.out.println();

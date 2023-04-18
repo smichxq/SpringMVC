@@ -84,10 +84,12 @@ public class User {
         return userBan;
     }
 
-    public User setUserBan(boolean userBan) {
+    public void setUserBan(boolean userBan) {
         this.userBan = userBan;
-        return this;
+//        return this;
     }
+
+
 
     @Override
     public String toString() {
@@ -108,26 +110,28 @@ public class User {
         return userSalt;
     }
 
-    public User setUserSalt(String userSalt) {
+    public void setUserSalt(String userSalt) {
         this.userSalt = userSalt;
-        return this;
+//        return this;
     }
 
     public String getUserActivityCode() {
         return userActivityCode;
     }
 
-    public User setUserActivityCode(String userActivityCode) {
+    public void setUserActivityCode(String userActivityCode) {
         this.userActivityCode = userActivityCode;
-        return this;
+//        return this;
     }
 
-    public boolean isUserStatus() {
-        return userStatus;
-    }
-
-    public User setUserStatus(boolean userStatus) {
+    public void setUserStatus(boolean userStatus) {
         this.userStatus = userStatus;
-        return this;
     }
+
+    public boolean getUserStatus() {
+        return this.userStatus;
+    }
+
+
+
 }

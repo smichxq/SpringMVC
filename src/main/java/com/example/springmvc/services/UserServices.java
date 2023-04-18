@@ -1,7 +1,9 @@
 package com.example.springmvc.services;
 
 
+import com.example.springmvc.entity.LoginTicket;
 import com.example.springmvc.entity.User;
+import com.example.springmvc.mapper.LoginTicketMapper;
 import com.example.springmvc.mapper.UserMapper;
 import com.example.springmvc.util.CommonUtil;
 import com.example.springmvc.util.MailClent;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +25,9 @@ public class UserServices extends Thread{
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private LoginTicketMapper loginTicketMapper;
 
     //域名:localhost:8080
     @Value("${community.path.domain}")
@@ -239,5 +245,59 @@ public class UserServices extends Thread{
 
     }
 
+    //用来处理从Controller层返回的用户登录信息
+    //用户合法性判断
+    //合法后注册ticket，返回登陆凭证
+    public Map<String, Object> userLogin(String account, String password, long expired) {
+        Map<String, Object> map = new HashMap<>();
+
+        //数据合法性校验
+        if (StringUtils.isBlank(account)) {
+            map.put("accountMassage", "账号不能未空");
+            return map;
+
+        }
+
+        if (StringUtils.isBlank(password)) {
+            map.put("passwordMassage", "密码不能为空");
+            return map;
+        }
+
+        //用户查询
+        User user = userMapper.getUserByAccount(account);
+        if (user == null) {
+            map.put("userMassage", "无该用户");
+            return map;
+        }
+
+        if (!user.getUserStatus()) {
+            map.put("userStatue", "用户未激活");
+            return map;
+        }
+
+        if (!CommonUtil.getMd5(password + user.getUserSalt()).equals(user.getUserPassword())) {
+            map.put("userPassword", "密码错误");
+            return map;
+        }
+
+
+        //登录凭证注册
+        LoginTicket loginTicket = new LoginTicket();
+        loginTicket.setStatus(0);
+        loginTicket.setUserId(user.getUserId());
+        //ticket是浏览器保存的凭证
+        loginTicket.setTicket(CommonUtil.UUID());
+        //有效时间：后移30秒
+        loginTicket.setExpired(new Date(System.currentTimeMillis() + expired));
+
+        loginTicketMapper.insertLoginTicket(loginTicket);
+
+        map.put("loginTicket",loginTicket);
+
+        return map;
+
+
+
+    }
 
 }
