@@ -16,14 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.imageio.ImageIO;
-import javax.servlet.http.Cookie;
+import jakarta.servlet.http.Cookie;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -32,6 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Controller
+//@CrossOrigin(origins = "http://localhost:8080/")
 @RequestMapping("/login")
 public class LoginController {
 
@@ -66,6 +64,7 @@ public class LoginController {
         if (user.getUserId() == userId_Int && user.getUserActivityCode().equals(activityCode)) {
              model.addAttribute("activityStatue",true);
              model.addAttribute("userId",userId);
+             userMapper.updateStatusById(userId_Int,true);
         }
         else {
             model.addAttribute("activityStatue",false);
@@ -148,7 +147,7 @@ public class LoginController {
     }
 
     //用来转到用户登录页面
-    @RequestMapping(value = "/presigin", method = RequestMethod.GET)
+    @RequestMapping(value = "/sigin", method = RequestMethod.GET)
     public String preUserSignin() {
 
 //        count++;
@@ -157,19 +156,28 @@ public class LoginController {
     }
 
 
-    //处理用户登录
-    @RequestMapping(value = "/signin", method = RequestMethod.POST)
-    public String userSignin(String account, String password, String code, boolean rememberMe, Model model, HttpSession session, javax.servlet.http.HttpServletResponse response) {
-        String kaptcha =(String) session.getAttribute("kaptcha");
+//    @RequestMapping(value = "/error", method = RequestMethod.GET)
+//    @ResponseBody
+//    public Map<String,Object> getErrMsg() {
+//        return null;
+//    }
 
-        //UserServices.userLogin方法返回值
+
+    //处理用户登录
+    @RequestMapping(value = "/sigin", method = RequestMethod.POST)
+    public String userSignin(String account, String password, String code, boolean rememberMe, Model model, HttpSession session, HttpServletResponse response) {
+        String kaptcha =(String) session.getAttribute("kaptcha");
+        rememberMe = true;
+        logger.info("kaptcha: " + kaptcha);
+
+        //接收UserServices.userLogin方法返回的值
         Map<String,Object> map = null;
 
 
         //浏览器传入的验证码为空、session保存的验证码未空、传入的验证码错误(不区分大小写)
         if (StringUtils.isBlank(code) || StringUtils.isBlank(kaptcha) || !kaptcha.equalsIgnoreCase(code)) {
-            model.addAttribute("codeMsg", "验证码错误");
-            return "登录模板对应处理";
+            model.addAttribute("errMsg", "验证码错误");
+            return "/err/loginerr";
         }
 
         //remberMe用来选择是否免登录，即服务端记录用户登录凭证时间
@@ -183,34 +191,38 @@ public class LoginController {
 //        }
 
         //上面等效替代
-        int expired = rememberMe?1000 * 60 * 60 * 24 * 30:1000 * 60 * 60 * 24 * 1;
+        int expired = rememberMe?Integer.MAX_VALUE:1000 * 60 * 60 * 24 * 1;
 
         map = userServices.userLogin(account,password,expired);
+
+        if (map.containsKey("errMsg")) {
+            model.addAttribute("errMsg", map.get("errMsg"));
+            return "/err/loginerr";
+        }
+
 
         //登陆成功，Services已经注册凭证
         if (map.containsKey("loginTicket")) {
             //让浏览器接收凭证
             Cookie cookie = new Cookie("ticket",((LoginTicket) map.get("loginTicket")).getTicket());
+
             //Cookie生效范围，登陆后一般是整个项目都可
             cookie.setPath(contextPath);
             cookie.setMaxAge(expired);
             response.addCookie(cookie);
-
-
-            return "重定向至登陆成功页面";
+            //重定向登陆成功页面
+            return "/demo/alluser";
 
         }
         else {
-            return "返回错误信息，提示用户重新输入";
+            model.addAttribute("errMsg","登陆凭证无效，请联系管理员");
+            return "/err/loginerr";
         }
 
 
 
 
-
-
-
-        return "";
+//        return "";
 
     }
 

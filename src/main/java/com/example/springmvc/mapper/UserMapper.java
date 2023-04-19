@@ -32,4 +32,6 @@ public interface UserMapper {
 
     List<Map<String, String>> userCheckByAccName(String userName, String userAcc);
 
+    int updateStatusById(int userId, boolean userStatus);
+
 }

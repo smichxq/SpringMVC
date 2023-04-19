@@ -253,30 +253,30 @@ public class UserServices extends Thread{
 
         //数据合法性校验
         if (StringUtils.isBlank(account)) {
-            map.put("accountMassage", "账号不能未空");
+            map.put("errMsg", "账号不能未空");
             return map;
 
         }
 
         if (StringUtils.isBlank(password)) {
-            map.put("passwordMassage", "密码不能为空");
+            map.put("errMsg", "密码不能为空");
             return map;
         }
 
         //用户查询
         User user = userMapper.getUserByAccount(account);
         if (user == null) {
-            map.put("userMassage", "无该用户");
+            map.put("errMsg", "无该用户");
             return map;
         }
 
         if (!user.getUserStatus()) {
-            map.put("userStatue", "用户未激活");
+            map.put("errMsg", "用户未激活");
             return map;
         }
 
         if (!CommonUtil.getMd5(password + user.getUserSalt()).equals(user.getUserPassword())) {
-            map.put("userPassword", "密码错误");
+            map.put("errMsg", "密码错误");
             return map;
         }
 

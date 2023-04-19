@@ -22,6 +22,12 @@
         where user_id = #{userId}
     </update>
 
+    <update id="updateStatusById">
+        update person set
+        user_status = #{userStatus}
+        where user_id = #{userId}
+    </update>
+
     <update id="updateAge">
         update person set
         user_age = #{userAge}
