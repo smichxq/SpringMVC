@@ -1,17 +1,13 @@
 package com.example.springmvc;
 
 
-import com.example.springmvc.entity.User;
 import com.example.springmvc.services.UserServices;
-import jakarta.mail.MessagingException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -23,6 +19,7 @@ public class UserServicesTest {
 
     @Test
     public void test() {
+
 //        User userExist = new User();
 //        userExist.setUser(
 //                "uddxvklu",
@@ -56,5 +53,7 @@ public class UserServicesTest {
 //        } catch (MessagingException e) {
 //            throw new RuntimeException(e);
 //        }
+
+
     }
 }

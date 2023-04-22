@@ -2,7 +2,6 @@ package com.example.springmvc;
 
 
 import com.example.springmvc.Prac.Hello;
-import com.example.springmvc.demo.A;
 import com.example.springmvc.util.CommonUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;

@@ -20,6 +20,7 @@ accountInput.addEventListener('input', function() {
             if (xhr.status === 200) {
                 const response = JSON.parse(xhr.responseText);
                 accountTip.textContent = response.message;
+                //服务器直接返回的JSON
                 accountTip.classList.toggle('error', !response.success);
                 accountTip.classList.toggle('success', response.success);
             }

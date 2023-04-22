@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!--只负责返回错误信息以供AJAX获取-->
 <head>
     <meta charset="UTF-8">
@@ -7,5 +8,7 @@
 </head>
 <body>
 <div id="errMsg" th:text="${errMsg}"></div>
+<!--<div id="errMsg">验证码错误</div>-->
 </body>
+
 </html>

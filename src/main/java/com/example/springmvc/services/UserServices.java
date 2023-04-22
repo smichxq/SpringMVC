@@ -8,17 +8,17 @@ import com.example.springmvc.mapper.UserMapper;
 import com.example.springmvc.util.CommonUtil;
 import com.example.springmvc.util.MailClent;
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 @Service
 public class UserServices extends Thread{
@@ -270,15 +270,18 @@ public class UserServices extends Thread{
             return map;
         }
 
+        if (!CommonUtil.getMd5(password + user.getUserSalt()).equals(user.getUserPassword())) {
+            map.put("errMsg", "密码错误");
+            return map;
+        }
+
         if (!user.getUserStatus()) {
             map.put("errMsg", "用户未激活");
             return map;
         }
 
-        if (!CommonUtil.getMd5(password + user.getUserSalt()).equals(user.getUserPassword())) {
-            map.put("errMsg", "密码错误");
-            return map;
-        }
+
+
 
 
         //登录凭证注册
@@ -287,9 +290,10 @@ public class UserServices extends Thread{
         loginTicket.setUserId(user.getUserId());
         //ticket是浏览器保存的凭证
         loginTicket.setTicket(CommonUtil.UUID());
-        //有效时间：后移30秒
+        System.out.println("UserServices: " + expired);
+        //有效时间：expired
         loginTicket.setExpired(new Date(System.currentTimeMillis() + expired));
-
+        System.out.println(loginTicket.toString());
         loginTicketMapper.insertLoginTicket(loginTicket);
 
         map.put("loginTicket",loginTicket);
@@ -297,6 +301,30 @@ public class UserServices extends Thread{
         return map;
 
 
+
+    }
+
+
+    //用户登录免登录检查
+    public Map<String,String> userLogin(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        Map<String,String> map = new HashMap<>();
+        for (Cookie cookie:
+             cookies) {
+            //请求中携带免登录ticket
+
+            if (StringUtils.equals(cookie.getName(),"ticket")) {
+                LoginTicket loginTicket = loginTicketMapper.selectLoginTicketByTicket(cookie.getValue());
+                //ticket在有效期内且用户状态没有被禁止
+                //优化思路：可以增加定时维护loginTicket表的服务,将过期的ticket删除、更新被封禁用户的status字段
+                if (loginTicket.getExpired().getTime() > System.currentTimeMillis() && loginTicket.getStatus() == 1) {
+                    map.put("userId", String.valueOf(loginTicket.getUserId()));
+                    return map;
+                }
+            }
+        }
+
+        return map;
 
     }
 

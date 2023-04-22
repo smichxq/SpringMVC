@@ -1,6 +1,5 @@
 package com.example.springmvc.entity;
 
-import javax.swing.*;
 import java.util.Date;
 
 public class LoginTicket {

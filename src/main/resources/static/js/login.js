@@ -40,17 +40,38 @@ $(document).ready(function() {
         if (isValidEmail(emailInput.value.trim()) && passwordInput.value.trim() !== '' && captchaInput.value.trim() !== '') {
             // form.submit();
 
-
             // 通过Ajax发送表单数据
             $.ajax({
                 url: 'http://' + domain + form.getAttribute("action"), // 表单提交的URL
                 type: 'POST', // 表单提交的方法
                 data: $(this).serialize(), // 表单数据
                 success: function (response) {
+                    document.write(response);
+                    // response.getResponseHeader("REDIRECT");
+                    // window.location.href =
                     // 处理表单提交后的响应
                     //获取响应的html中的元素内容
-                    var elementContent = $('#errMsg').text();
-                    showAlert(elementContent);
+                    console.log(this.url);
+                    console.log(response);
+                    // 将响应的HTML字符串解析为HTML格式，并将其中的错误信息提取出来
+                    var elementContent = $.parseHTML(response);
+                    var msg = "";
+                    $(elementContent).each(function(index, element) {
+                        if (element.id === "errMsg") {
+                            msg = element.textContent;
+                            return false; // 停止遍历
+                        }
+                    });
+                    // console.log(msg);
+
+
+                    // var errMsg = $(elementContent).find("#errMsg").text();
+                    // console.log(errMsg);
+
+                    // var elementContent = $(response).find("#errMsg").html();  // 从响应中获取id为"errMsg"的div元素的内容
+                    // var elementContent = $('#errMsg').text();
+                    // console.log(elementContent);
+                    showAlert(msg);
 
                 },
                 error: function (xhr, status, error) {
@@ -94,14 +115,14 @@ function showAlert(message) {
         setTimeout(function() {
             alertContainer.removeChild(alertBox);
         }, 300);
-    }, 12000);
+    }, 1000);
 
     setTimeout(function() {
         alertBox.style.opacity = 0;
         setTimeout(function() {
             Container.removeChild(alertContainer);
         }, 300);
-    }, 12000);
+    }, 1000);
 }
 
 // 使用示例
