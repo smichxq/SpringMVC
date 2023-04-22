@@ -152,6 +152,8 @@ public class LoginController {
 
     //用来转到用户登录页面
     //提前截获免登录用户并将其重定向
+    //还可使用@CookieValue("ticket") String ticket来直接获取
+    //不建议将requres/response对象传入Userservices，因为容器会随时清空这个对象的栈信息
     @RequestMapping(value = "/sigin", method = RequestMethod.GET)
     public String preUserSignin(HttpServletRequest request, Model model) {
         //没有携带cookie的直接去登录
