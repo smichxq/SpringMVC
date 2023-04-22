@@ -46,6 +46,7 @@ $(document).ready(function() {
                 type: 'POST', // 表单提交的方法
                 data: $(this).serialize(), // 表单数据
                 success: function (response) {
+                    //将返回的html直接加载
                     document.write(response);
                     // response.getResponseHeader("REDIRECT");
                     // window.location.href =
