@@ -120,8 +120,6 @@ public class LoginController {
         } else {
             return "{\"success\": true, \"message\": \"该名字可用\"}";
         }
-
-
     }
 
     @RequestMapping(value = "/kaptcha*", method = RequestMethod.GET)
@@ -155,17 +153,13 @@ public class LoginController {
     //还可使用@CookieValue("ticket") String ticket来直接获取
     //不建议将requres/response对象传入Userservices，因为容器会随时清空这个对象的栈信息
     @RequestMapping(value = "/sigin", method = RequestMethod.GET)
-    public String preUserSignin(HttpServletRequest request, Model model) {
+    public String preUserSignin(@CookieValue("ticket") String cookie, Model model) {
         //没有携带cookie的直接去登录
-        if (request.getCookies() == null) {
+        if (cookie == null) {
             return "/demo/login";
         }
 
-        if (request.getCookies().length < 1) {
-            return "/demo/login";
-        }
-
-        Map<String,String> map = userServices.userLogin(request);
+        Map<String,String> map = userServices.userLogin(cookie);
 
         if (map.containsKey("userId")) {
             User user = userMapper.getUser(Integer.parseInt(map.get("userId")));

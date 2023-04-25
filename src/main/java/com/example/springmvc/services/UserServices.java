@@ -306,26 +306,24 @@ public class UserServices extends Thread{
 
 
     //用户登录免登录检查
-    public Map<String,String> userLogin(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
+    public Map<String,String> userLogin(String ticketForCookie) {
         Map<String,String> map = new HashMap<>();
-        for (Cookie cookie:
-             cookies) {
-            //请求中携带免登录ticket
 
-            if (StringUtils.equals(cookie.getName(),"ticket")) {
-                LoginTicket loginTicket = loginTicketMapper.selectLoginTicketByTicket(cookie.getValue());
-                //ticket在有效期内且用户状态没有被禁止
-                //优化思路：可以增加定时维护loginTicket表的服务,将过期的ticket删除、更新被封禁用户的status字段
-                if (loginTicket.getExpired().getTime() > System.currentTimeMillis() && loginTicket.getStatus() == 1) {
-                    map.put("userId", String.valueOf(loginTicket.getUserId()));
-                    return map;
-                }
-            }
+        LoginTicket loginTicket = loginTicketMapper.selectLoginTicketByTicket(ticketForCookie);
+
+        //ticket在有效期内且用户状态没有被禁止
+        //优化思路：可以增加定时维护loginTicket表的服务,将过期的ticket删除、更新被封禁用户的status字段
+        if (loginTicket != null && loginTicket.getExpired().after(new Date()) && loginTicket.getStatus() == 1) {
+            map.put("userId", String.valueOf(loginTicket.getUserId()));
+            return map;
         }
+
+
 
         return map;
 
     }
+
+
 
 }

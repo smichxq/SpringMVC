@@ -24,6 +24,13 @@ public class HomeController {
 
 
 
+    @RequestMapping(value = "/success", method = RequestMethod.GET)
+    public String success() {
+        return "/demo/success";
+    }
+
+
+
     @RequestMapping(value = "allusers",method = RequestMethod.GET)
 //    @ResponseBody
 
