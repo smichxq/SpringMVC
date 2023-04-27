@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.HashMap;
 import java.util.Map;
@@ -76,5 +77,22 @@ public class TempTest {
     class Node {
         public String string;
         public boolean aBoolean;
+    }
+
+
+    @Test
+    public void test4() throws Exception {
+        SensitiveWordsFilter sensitiveWordsFilter = new SensitiveWordsFilter();
+//        char[] chars = sensitiveWordsFilter.inputStreamToCharacter(new FileReader(new File("src/main/resources/sensitive/sensitive_demo.txt")));
+//
+//        for (char ch :
+//                chars) {
+//            System.out.println(ch);
+//        }
+
+        sensitiveWordsFilter.treeInit(new File("src/main/resources/sensitive/sensitive_demo.txt"));
+        sensitiveWordsFilter.getTireTreeNodeRoot();
+
+
     }
 }

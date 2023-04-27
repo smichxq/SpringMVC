@@ -9,10 +9,10 @@ import java.nio.CharBuffer;
 import java.util.*;
 
 public class SensitiveWordsFilter {
-//    Map<String,TreeNode> leafs;
+//    Map<String,TireTreeNode> leafs;
     private static final String replaceWith = "*";
 
-    TreeNode treeNodeRoot = new TreeNode();
+    private TireTreeNode TireTreeNodeRoot = new TireTreeNode();
 
     /**
      * 前缀树
@@ -20,16 +20,16 @@ public class SensitiveWordsFilter {
      * 节点的字符不能重复
      */
 
-     class TreeNode {
+     class TireTreeNode {
 
 //        String word;
         Character word;
         //后继(多个)
-//        HashSet<TreeNode> next;
+//        HashSet<TireTreeNode> next;
 
         //不使用Hash的原因：在生成树时，无法根据字符去重
         //使用HashMap的原因：可以根据key去重
-        HashMap<Character,TreeNode> next;
+        HashMap<Character,TireTreeNode> next;
         //结尾
         boolean end;
 
@@ -37,26 +37,26 @@ public class SensitiveWordsFilter {
             return word;
         }
 
-        public TreeNode setWord(Character word) {
+        public TireTreeNode setWord(Character word) {
             this.word = word;
             return this;
         }
 
-//        public HashSet<TreeNode> getNext() {
+//        public HashSet<TireTreeNode> getNext() {
 //            return next;
 //        }
 //
-//        public TreeNode setNext(HashSet<TreeNode> next) {
+//        public TireTreeNode setNext(HashSet<TireTreeNode> next) {
 //            this.next = next;
 //            return this;
 //        }
 
 
-        public HashMap<Character, TreeNode> getNext() {
+        public HashMap<Character, TireTreeNode> getNext() {
             return next;
         }
 
-        public TreeNode setNext(HashMap<Character, TreeNode> next) {
+        public TireTreeNode setNext(HashMap<Character, TireTreeNode> next) {
             this.next = next;
             return this;
         }
@@ -65,7 +65,7 @@ public class SensitiveWordsFilter {
             return end;
         }
 
-        public TreeNode setEnd(boolean end) {
+        public TireTreeNode setEnd(boolean end) {
             this.end = end;
             return this;
         }
@@ -75,14 +75,14 @@ public class SensitiveWordsFilter {
     /**
      *
      * @param file
-     * @return TreeNode
+     * @return TireTreeNode
      * 建议将要屏蔽的文字按照示例存放到文件中
      * eg: 赌博 吸毒 毛泽东
      */
-    public TreeNode treeInit(File file) throws Exception {
-        this.treeNodeRoot.setEnd(false);
-        HashMap<Character,TreeNode> hashMapRoot = new HashMap<>();
-        this.treeNodeRoot.setNext(hashMapRoot);
+    public TireTreeNode treeInit(File file) throws Exception {
+        this.TireTreeNodeRoot.setEnd(false);
+        HashMap<Character,TireTreeNode> hashMapRoot = new HashMap<>();
+        this.TireTreeNodeRoot.setNext(hashMapRoot);
 
         //根节点为空
         char[] chars = inputStreamToCharacter(new FileReader(file));
@@ -91,45 +91,46 @@ public class SensitiveWordsFilter {
 
         for (char ch:
         chars){
-
+            //假设文件开头必为字符
             if (ch == ' ' || ch == '\n') {
                 //新建一个节点
-                TreeNode treeNode;
-                TreeNode treeNodeLast = null;
+                TireTreeNode TireTreeNode;
+                TireTreeNode TireTreeNodeLast = null;
 
                 Character chTemp;
                 chTemp = queue.peek();
+                queue.remove();
 
 
 
-                HashMap<Character,TreeNode> hashMap = null;
+                HashMap<Character,TireTreeNode> hashMap = null;
 
-                if (!(this.treeNodeRoot.getNext().containsKey(chTemp))) {
-                    treeNode = new TreeNode();
+                if (!(this.TireTreeNodeRoot.getNext().containsKey(chTemp))) {
+                    TireTreeNode = new TireTreeNode();
 
-                    this.treeNodeRoot.getNext().put(chTemp,treeNode);
+                    this.TireTreeNodeRoot.getNext().put(chTemp,TireTreeNode);
 
 
                     //可以根据字符去重
                     hashMap = new HashMap<>();
                     //先将HashMap存入，后续提供HashMap维护子节点
-                    treeNode.setNext(hashMap);
-                    treeNode.setWord(chTemp);
-                    treeNode.setEnd(false);
+                    TireTreeNode.setNext(hashMap);
+                    TireTreeNode.setWord(chTemp);
+                    TireTreeNode.setEnd(false);
 
                 }
 
                 //已经存在，那么只需要获取该节点的Map并维护
                 else {
 
-                     treeNode = this.treeNodeRoot.getNext().get(chTemp);
+                     TireTreeNode = this.TireTreeNodeRoot.getNext().get(chTemp);
                      //已存在节点，从节点中获取Map即可
-                     hashMap = treeNode.getNext();
+                     hashMap = TireTreeNode.getNext();
 
 
                 }
 
-                treeNodeLast = treeNode;
+                TireTreeNodeLast = TireTreeNode;
 
 
 
@@ -140,59 +141,66 @@ public class SensitiveWordsFilter {
                 while (!queue.isEmpty()) {
 
                     character = queue.peek();
+                    queue.remove();
 
 
                     //根节点维护的map与其子节点将要插入的值相同
-                    if (hashMap.containsKey(character)) {
+                    if (hashMap != null && hashMap.containsKey(character)) {
                         //上一个节点为结尾
-//                        treeNode = treeNodeLast;
+//                        TireTreeNode = TireTreeNodeLast;
                         //尽快回收
-//                        treeNodeLast = null;
+//                        TireTreeNodeLast = null;
 //                        System.gc();
                         //每次移动当前指针时，先记录上一个指针
-                        treeNodeLast = treeNode;
+                        TireTreeNodeLast = TireTreeNode;
 
-                        treeNode = hashMap.get(character);
+                        TireTreeNode = hashMap.get(character);
 
-                        hashMap = treeNode.getNext();
+                        hashMap = TireTreeNode.getNext();
 
                         continue;
                     }
 
                     //每次移动当前指针时，先记录上一个指针
-                    treeNodeLast = treeNode;
+                    TireTreeNodeLast = TireTreeNode;
 
                     //初始化下一个节点
-                    treeNode = new TreeNode();
+                    TireTreeNode = new TireTreeNode();
 
-//                    TreeNode treeNodeT = new TreeNode();
+//                    TireTreeNode TireTreeNodeT = new TireTreeNode();
 
-//                    treeNodeLast.getNext().put(character,treeNode);
-//                    treeNode.getNext().put(character,treeNodeT);
+                    if (TireTreeNodeLast.getNext() == null) {
+                        TireTreeNodeLast.setNext(new HashMap<Character,TireTreeNode>());
+                    }
+
+                    TireTreeNodeLast.getNext().put(character,TireTreeNode);
+//                    TireTreeNode.getNext().put(character,TireTreeNodeT);
 
 
-                    treeNode.setWord(character);
-                    treeNode.setEnd(false);
+                    TireTreeNode.setWord(character);
+                    TireTreeNode.setEnd(false);
+
 
                     //方便修改相对于下一次循环的上一个节点
-//                    treeNodeLast = treeNode;
+//                    TireTreeNodeLast = TireTreeNode;
 
 
 
 
 
-//                    treeNode.setEnd(true);
+//                    TireTreeNode.setEnd(true);
 
 
                 }
+                TireTreeNode.setEnd(true);
 
-                treeNode = treeNodeLast;
+                TireTreeNode = TireTreeNodeLast;
 
-                if (treeNode != null) {
-                    throw new NullPointerException("TreeNode is Null!");
+                if (TireTreeNode == null) {
+                    throw new NullPointerException("TireTreeNode is Null!");
                 }
 
-                treeNode.setEnd(true);
+
 
 
                 continue;
@@ -202,7 +210,7 @@ public class SensitiveWordsFilter {
         }
 
 
-        return null;
+        return this.TireTreeNodeRoot;
 
     }
 
@@ -229,9 +237,12 @@ public class SensitiveWordsFilter {
 
         //先利用Arraylist的自动扩容去存放文件内容
         while ( ( ch = in.read() ) != -1){
-            arrayList.add(ch);
+            if (ch != '\r'){
+                arrayList.add(ch);
+            }
+
         }
-        arrayList.add(-1);
+//        arrayList.add(-1);
 
         if (arrayList.size() < 0) {
             in.close();
@@ -256,14 +267,12 @@ public class SensitiveWordsFilter {
 
     }
 
+    public TireTreeNode getTireTreeNodeRoot() {
+        return TireTreeNodeRoot;
+    }
 
-
-
-
-
-
-
-
-
-
+//    public SensitiveWordsFilter setTireTreeNodeRoot(TireTreeNode tireTreeNodeRoot) {
+//        TireTreeNodeRoot = tireTreeNodeRoot;
+//        return this;
+//    }
 }
