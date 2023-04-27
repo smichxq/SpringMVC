@@ -91,7 +91,13 @@ public class TempTest {
 //        }
 
         sensitiveWordsFilter.treeInit(new File("src/main/resources/sensitive/sensitive_demo.txt"));
-        sensitiveWordsFilter.getTireTreeNodeRoot();
+        System.out.println(sensitiveWordsFilter.checkAndReplace("为遵守国家法律法规和豆瓣社区管理规定，维护小组秩序，小组可添加违禁词，当帖子主楼或回复含有违禁词时帖子会进入回收站受到审核。目前共累计违禁词317个，管理员会根据情况的变化持续添加或删减中。八组仍然坚持以共产党讨论明星·电影·音乐·文学话题为主，生活娱乐为毛泽东辅，有关国家、民族、宗吸鸦片教等一系列敏感的话题不应当出现在小组中。违反组规的帖子被删除后无法恢复。禁止吸和毒赌博还有等等"));
+//        String s = "d2ss";
+//        char[] chars = s.toCharArray();
+//        chars[0] = '2';
+//        chars.toString();
+//        System.out.println(chars);
+
 
 
     }

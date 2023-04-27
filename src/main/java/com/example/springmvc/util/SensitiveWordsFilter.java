@@ -10,9 +10,9 @@ import java.util.*;
 
 public class SensitiveWordsFilter {
 //    Map<String,TireTreeNode> leafs;
-    private static final String replaceWith = "*";
+    private static final char replaceWith = '*';
 
-    private TireTreeNode TireTreeNodeRoot = new TireTreeNode();
+    private TireTreeNode tireTreeNodeRoot;
 
     /**
      * 前缀树
@@ -80,9 +80,10 @@ public class SensitiveWordsFilter {
      * eg: 赌博 吸毒 毛泽东
      */
     public TireTreeNode treeInit(File file) throws Exception {
-        this.TireTreeNodeRoot.setEnd(false);
+        this.tireTreeNodeRoot = new TireTreeNode();
+        this.tireTreeNodeRoot.setEnd(false);
         HashMap<Character,TireTreeNode> hashMapRoot = new HashMap<>();
-        this.TireTreeNodeRoot.setNext(hashMapRoot);
+        this.tireTreeNodeRoot.setNext(hashMapRoot);
 
         //根节点为空
         char[] chars = inputStreamToCharacter(new FileReader(file));
@@ -105,10 +106,10 @@ public class SensitiveWordsFilter {
 
                 HashMap<Character,TireTreeNode> hashMap = null;
 
-                if (!(this.TireTreeNodeRoot.getNext().containsKey(chTemp))) {
+                if (!(this.tireTreeNodeRoot.getNext().containsKey(chTemp))) {
                     TireTreeNode = new TireTreeNode();
 
-                    this.TireTreeNodeRoot.getNext().put(chTemp,TireTreeNode);
+                    this.tireTreeNodeRoot.getNext().put(chTemp,TireTreeNode);
 
 
                     //可以根据字符去重
@@ -123,7 +124,7 @@ public class SensitiveWordsFilter {
                 //已经存在，那么只需要获取该节点的Map并维护
                 else {
 
-                     TireTreeNode = this.TireTreeNodeRoot.getNext().get(chTemp);
+                     TireTreeNode = this.tireTreeNodeRoot.getNext().get(chTemp);
                      //已存在节点，从节点中获取Map即可
                      hashMap = TireTreeNode.getNext();
 
@@ -210,7 +211,7 @@ public class SensitiveWordsFilter {
         }
 
 
-        return this.TireTreeNodeRoot;
+        return this.tireTreeNodeRoot;
 
     }
 
@@ -267,12 +268,74 @@ public class SensitiveWordsFilter {
 
     }
 
-    public TireTreeNode getTireTreeNodeRoot() {
-        return TireTreeNodeRoot;
+    public TireTreeNode gettireTreeNodeRoot() {
+        return tireTreeNodeRoot;
     }
 
-//    public SensitiveWordsFilter setTireTreeNodeRoot(TireTreeNode tireTreeNodeRoot) {
-//        TireTreeNodeRoot = tireTreeNodeRoot;
-//        return this;
-//    }
+    public String checkAndReplace(String context){
+        char[] c = context.toCharArray();
+
+        TireTreeNode prior,current;
+        int start,offset;
+        start = offset = 0;
+
+        prior = null;
+        current = null;
+
+        for (int i = 0 ; i< context.length(); i++) {
+
+            //当前字符为敏感词前缀(前缀树第一个节点)
+            if (this.tireTreeNodeRoot.getNext().containsKey(c[i])) {
+                prior = current = tireTreeNodeRoot.getNext().get(c[i]);
+                start = i;
+                offset = start + 1;
+
+
+            }
+            //当前字符并非敏感词前缀(前缀树第一个节点)
+            else {
+                //当前字符包含在敏感词,且下一个也包含
+                if (current !=null && current.getNext().containsKey(c[offset])) {
+
+                    //当前字符串为敏感词(offset已到前缀树的末尾)
+                    if (current.getNext().get(c[offset]).isEnd()) {
+                        //防止假如上层if
+                        current = null;
+
+                        //将start-offset全部屏蔽
+                        for (int j = start; j < (offset + 1); j++) {
+                            c[j] = replaceWith;
+                        }
+                        start = offset = 0;
+                        //开启下一轮
+//                        continue;
+                    }
+
+                    //当前字符串并非敏感词(offset未到前缀树末尾)
+                    else {
+
+                        //前缀树指针继续向下
+                        current = current.getNext().get(c[offset]);
+
+                        //待检测序列增加
+                        offset++;
+                    }
+
+
+                }
+
+//                current = null;
+
+//                offset = i;
+            }
+
+//            continue;
+        }
+
+
+
+        return String.valueOf(c);
+    }
+
+
 }
