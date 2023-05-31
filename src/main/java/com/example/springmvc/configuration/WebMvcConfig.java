@@ -15,7 +15,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(interceptorAlpha)//拦截器注册
-                .excludePathPatterns("/**/*.css","/**/*.js","/**/*.png","/**/*.jpg","/**/*.jpeg");//放行的资源
-//                .addPathPatterns("/home","/login/activation","login/sigin", "home/allusers");//拦截的路径
+                .excludePathPatterns("/**/*.css","/**/*.js","/**/*.png","/**/*.jpg","/**/*.jpeg")
+                .addPathPatterns("/home/allusers*","/login/activation","login/kaptcha*");//拦截的路径，必须详细到方法
     }
 }

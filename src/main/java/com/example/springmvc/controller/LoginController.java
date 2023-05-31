@@ -20,12 +20,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
 import jakarta.servlet.http.Cookie;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Date;
+
 import java.util.Map;
 
 @Controller
@@ -48,9 +47,6 @@ public class LoginController {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
-//    public LoginController() {
-//        count++;
-//    }
 
 
 
@@ -153,7 +149,18 @@ public class LoginController {
     //还可使用@CookieValue("ticket") String ticket来直接获取
     //不建议将requres/response对象传入Userservices，因为容器会随时清空这个对象的栈信息
     @RequestMapping(value = "/sigin", method = RequestMethod.GET)
-    public String preUserSignin(@CookieValue("ticket") String cookie, Model model) {
+    public String preUserSignin(HttpServletRequest request, Model model) {
+        String cookie = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies==null){
+            model.addAttribute("errMsg","cookie 为空");
+            return "/err/loginerr";
+        }
+        for (Cookie c:cookies){
+            if(c.getName().equals("ticket")){
+                cookie = c.getValue();
+            }
+        }
         //没有携带cookie的直接去登录
         if (cookie == null) {
             return "/demo/login";
@@ -169,7 +176,7 @@ public class LoginController {
                 return "/demo/success";
             }
             else {
-                model.addAttribute("errMsg","你的ticket确实存在，但你的用户数据已被注销");
+                model.addAttribute("errMsg","你的ticket确实存在，但用户数据已被注销");
                 return "/err/loginerr";
             }
         }
